@@ -12,9 +12,20 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
+// Helper function to implement a timeout for fetch requests
+const fetchWithTimeout = (url, options, timeout = 5000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Service Unavailable: request timeout')), timeout)
+    )
+  ]);
+};
+
 const Surprise = () => {
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Track errors
   const [visitedIps, setVisitedIps] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5; // Number of rows per page
@@ -23,11 +34,12 @@ const Surprise = () => {
   useEffect(() => {
     const fetchStoredIps = async () => {
       try {
-        const response = await fetch('https://portfolioserver-ttng.onrender.com/ips');
+        const response = await fetchWithTimeout('https://portfolioserver-ttng.onrender.com/ips', {}, 5000);
         const data = await response.json();
         setVisitedIps(data);
       } catch (error) {
         console.error('Error fetching stored IPs:', error);
+        setError('Service Unavailable: unable to fetch IPs'); // Set error message
       }
     };
 
@@ -37,12 +49,16 @@ const Surprise = () => {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await fetch('https://portfolioserver-ttng.onrender.com/store-ip', {
+        const response = await fetchWithTimeout('https://portfolioserver-ttng.onrender.com/store-ip', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-        });
+        }, 5000); // Timeout set to 5 seconds
+
+        if (!response.ok) {
+          throw new Error('Service Unavailable: Failed to fetch location');
+        }
 
         const ipData = await response.json();
         const { ip, city, lat, lon } = ipData.data;
@@ -61,6 +77,7 @@ const Surprise = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching location data:", error);
+        setError('Service Unavailable: unable to fetch location'); // Set error message
         setLoading(false);
       }
     };
@@ -78,6 +95,19 @@ const Surprise = () => {
 
   if (loading) {
     return <p>Loading map...</p>;
+  }
+
+  // If there's an error, display a big text message
+  if (error) {
+    return (
+      <div className="surprise-section">
+        <div className="surprise-container">
+          <h1 style={{ color: 'red', fontSize: '48px', textAlign: 'center', marginTop: '100px' }}>
+            {error}
+          </h1>
+        </div>
+      </div>
+    );
   }
 
   if (!location || !location.ip || !location.lat || !location.lon) {
