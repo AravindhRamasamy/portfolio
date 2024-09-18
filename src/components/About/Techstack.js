@@ -1,6 +1,5 @@
 import React from "react";
 import { Col, Row, Tooltip, OverlayTrigger } from "react-bootstrap";
-import { CgCPlusPlus } from "react-icons/cg";
 import {
   DiJavascript1,
   DiReact,
@@ -14,10 +13,6 @@ import {
   DiDocker,
 } from "react-icons/di";
 import {
-  SiRedis,
-  SiFirebase,
-  SiNextdotjs,
-  SiSolidity,
   SiPostgresql,
   SiOracle,
   SiSpringboot,
@@ -28,7 +23,7 @@ import {
   SiApachemaven,
   SiJunit5,
 } from "react-icons/si";
-import { TbBrandAngular, TbBrandGolang, TbSql } from "react-icons/tb";
+import { TbBrandAngular, TbSql } from "react-icons/tb";
 
 function Techstack() {
   const renderTooltip = (text) => (

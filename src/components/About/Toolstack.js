@@ -4,7 +4,6 @@ import {
   SiVisualstudiocode,
   SiPostman,
   SiSlack,
-  SiVercel,
   SiMacos,
   SiLinux,
   SiIntellijidea,
