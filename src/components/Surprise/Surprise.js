@@ -23,7 +23,7 @@ const Surprise = () => {
   useEffect(() => {
     const fetchStoredIps = async () => {
       try {
-        const response = await fetch('http://localhost:3001/ips');
+        const response = await fetch('https://portfolioserver-ttng.onrender.com/ips');
         const data = await response.json();
         setVisitedIps(data);
       } catch (error) {
@@ -52,7 +52,7 @@ const Surprise = () => {
           });
 
           // Store the IP and city to the backend
-          const storeIpResponse = await fetch('http://localhost:3001/store-ip', {
+          const storeIpResponse = await fetch('https://portfolioserver-ttng.onrender.com/store-ip', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
