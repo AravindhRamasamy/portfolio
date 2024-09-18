@@ -37,34 +37,27 @@ const Surprise = () => {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const token = process.env.REACT_APP_IPINFO_TOKEN;
-        const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(`https://ipinfo.io?token=${token}`));
-        const data = await response.json();
-        const ipData = JSON.parse(data.contents);
-        const { ip, city, loc } = ipData;
-        if (loc) {
-          const [lat, lon] = loc.split(',');
+        const response = await fetch('https://portfolioserver-ttng.onrender.com/store-ip', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const ipData = await response.json();
+        const { ip, city, lat, lon } = ipData.data;
+
+        if (lat && lon) {
           setLocation({
             ip,
             lat: parseFloat(lat),
             lon: parseFloat(lon),
             city,
           });
-
-          // Store the IP and city to the backend
-          const storeIpResponse = await fetch('https://portfolioserver-ttng.onrender.com/store-ip', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ ip, city }),
-          });
-
-          const storeIpData = await storeIpResponse.json();
-          console.log('Stored IP:', storeIpData);
         } else {
           throw new Error('Location data not available');
         }
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching location data:", error);
