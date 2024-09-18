@@ -618,6 +618,7 @@ button:focus {
 .resume {
   padding-top: 50px;
   padding-bottom: 50px;
+  overflow: hidden;
   justify-content: center;
 }
 
