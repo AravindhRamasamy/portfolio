@@ -57,7 +57,7 @@ const Surprise = () => {
         }, 5000); // Timeout set to 5 seconds
 
         if (!response.ok) {
-          throw new Error('Service Unavailable: Failed to fetch location');
+          throw new Error('Service Unavailable: Failed to fetch data');
         }
 
         const ipData = await response.json();
@@ -77,7 +77,7 @@ const Surprise = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching location data:", error);
-        setError('Service Unavailable: unable to fetch location'); // Set error message
+        setError('Service Unavailable: unable to fetch data'); // Set error message
         setLoading(false);
       }
     };
