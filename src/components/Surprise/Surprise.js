@@ -26,9 +26,6 @@ const Surprise = () => {
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // Track errors
-  const [visitedIps, setVisitedIps] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5; // Number of rows per page
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -68,14 +65,6 @@ const Surprise = () => {
 
     fetchLocation();
   }, []);
-
-  // Pagination logic: calculate the displayed rows
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = visitedIps.slice(indexOfFirstRow, indexOfLastRow);
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return <p>Loading map...</p>;
