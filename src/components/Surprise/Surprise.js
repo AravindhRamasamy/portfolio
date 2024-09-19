@@ -30,22 +30,6 @@ const Surprise = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5; // Number of rows per page
 
-  // Fetch all stored IP addresses on component mount
-  useEffect(() => {
-    const fetchStoredIps = async () => {
-      try {
-        const response = await fetchWithTimeout('https://portfolioserver-ttng.onrender.com/ips', {}, 5000);
-        const data = await response.json();
-        setVisitedIps(data);
-      } catch (error) {
-        console.error('Error fetching stored IPs:', error);
-        setError('Service Unavailable: unable to fetch IPs'); // Set error message
-      }
-    };
-
-    fetchStoredIps();
-  }, []);
-
   useEffect(() => {
     const fetchLocation = async () => {
       try {
@@ -124,38 +108,6 @@ const Surprise = () => {
           <h3>Your IP Address</h3>
           <p>{location.ip}</p>
           <p>{location.city}</p>
-
-          {/* Display visited IPs in a table */}
-          <div className="visited-ips">
-            <h4>Visited IP Addresses:</h4>
-            <table>
-              <thead>
-                <tr>
-                  <th>IP Address</th>
-                  <th>City</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentRows.map((visited, index) => (
-                  <tr key={index}>
-                    <td>{visited.ip}</td>
-                    <td>{visited.city}</td>
-                    <td>{new Date(visited.date).toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            
-            {/* Pagination buttons */}
-            <div className="pagination">
-              {Array.from({ length: Math.ceil(visitedIps.length / rowsPerPage) }, (_, index) => (
-                <button key={index} onClick={() => paginate(index + 1)} className={`pagination-btn ${currentPage === index + 1 ? 'active' : ''}`}>
-                  {index + 1}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
         <div className="map-container">
           <MapContainer center={[location.lat, location.lon]} zoom={13} className="leaflet-container">
